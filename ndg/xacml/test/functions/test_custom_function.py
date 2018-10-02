@@ -15,7 +15,7 @@ import unittest
 
 # Imports for custom functions
 import hashlib
-import urllib
+import urllib.parse
 from ndg.xacml.core.attributevalue import AttributeValueClassFactory
 from ndg.xacml.core.context.exceptions import XacmlContextTypeError
 from ndg.xacml.core.functions import (AbstractFunction,
@@ -31,14 +31,16 @@ from ndg.xacml.test.context import XacmlContextBaseTestCase
 logging.basicConfig(level=logging.DEBUG)
 
 THIS_DIR = path.dirname(__file__)
-XACML_CUSTOM_FUNCTION_TEST_FILEPATH = path.join(THIS_DIR, "policy_custom_function.xml")
+XACML_CUSTOM_FUNCTION_TEST_FILEPATH = path.join(THIS_DIR, 
+                                                "policy_custom_function.xml")
 
 attributeValueClassFactory = AttributeValueClassFactory()
 
 # Custom function definitions
 class Md5HexBase(AbstractFunction):
     FUNCTION_NS = None
-    TYPE = attributeValueClassFactory('http://www.w3.org/2001/XMLSchema#string')
+    TYPE = attributeValueClassFactory(
+                                'http://www.w3.org/2001/XMLSchema#string')
     RETURN_TYPE = attributeValueClassFactory(
                                 'http://www.w3.org/2001/XMLSchema#string')
     def evaluate(self, arg):
@@ -55,7 +57,7 @@ class Md5HexBase(AbstractFunction):
                                         'argument; got %r' %
                                         (self.__class__.TYPE,
                                          type(arg)))
-        result = hashlib.md5(arg.value).hexdigest()
+        result = hashlib.md5(arg.value.encode('utf-8')).hexdigest()
         return self.__class__.RETURN_TYPE(result)
 
 
@@ -81,9 +83,11 @@ class Md5HexFunctionClassFactory(FunctionClassFactoryBase):
 
 class UrlencodeBase(AbstractFunction):
     FUNCTION_NS = None
-    TYPE = attributeValueClassFactory('http://www.w3.org/2001/XMLSchema#string')
+    TYPE = attributeValueClassFactory(
+                                'http://www.w3.org/2001/XMLSchema#string')
     RETURN_TYPE = attributeValueClassFactory(
                                 'http://www.w3.org/2001/XMLSchema#string')
+    
     def evaluate(self, arg):
         """URL encodes a value
         
@@ -98,7 +102,7 @@ class UrlencodeBase(AbstractFunction):
                                         'argument; got %r' %
                                         (self.__class__.TYPE,
                                          type(arg)))
-        result = urllib.quote_plus(arg.value)
+        result = urllib.parse.quote_plus(arg.value)
         return self.__class__.RETURN_TYPE(result)
 
 
@@ -155,9 +159,9 @@ class Test(XacmlContextBaseTestCase):
         request = self._createRequestCtx(self.__class__.RESOURCE1_ID,
                                          subjectRoles=('role1',))
         response = self.pdp.evaluate(request)
-        self.failIf(response is None, "Null response")
+        self.assertFalse(response is None, "Null response")
         for result in response.results:
-            self.failIf(result.decision != Decision.PERMIT,
+            self.assertFalse(result.decision != Decision.PERMIT,
                         "Expecting Permit decision")
 
     def test01_02StringUrlencode(self):
@@ -168,9 +172,9 @@ class Test(XacmlContextBaseTestCase):
         request = self._createRequestCtx(self.__class__.RESOURCE2_ID,
                                          subjectRoles=('role1',))
         response = self.pdp.evaluate(request)
-        self.failIf(response is None, "Null response")
+        self.assertFalse(response is None, "Null response")
         for result in response.results:
-            self.failIf(result.decision != Decision.DENY,
+            self.assertFalse(result.decision != Decision.DENY,
                         "Expecting Deny decision")
 
     def test02_01AnyUriUrlencode(self):
@@ -181,9 +185,9 @@ class Test(XacmlContextBaseTestCase):
         request = self._createRequestCtx(self.__class__.RESOURCE3_ID,
                                          subjectRoles=('role1',))
         response = self.pdp.evaluate(request)
-        self.failIf(response is None, "Null response")
+        self.assertFalse(response is None, "Null response")
         for result in response.results:
-            self.failIf(result.decision != Decision.PERMIT,
+            self.assertFalse(result.decision != Decision.PERMIT,
                         "Expecting Permit decision")
 
     def test02_02AnyUriUrlencode(self):
@@ -194,9 +198,9 @@ class Test(XacmlContextBaseTestCase):
         request = self._createRequestCtx(self.__class__.RESOURCE4_ID,
                                          subjectRoles=('role1',))
         response = self.pdp.evaluate(request)
-        self.failIf(response is None, "Null response")
+        self.assertFalse(response is None, "Null response")
         for result in response.results:
-            self.failIf(result.decision != Decision.DENY,
+            self.assertFalse(result.decision != Decision.DENY,
                         "Expecting Deny decision")
 
     def test03_01StringMd5hex(self):
@@ -208,9 +212,9 @@ class Test(XacmlContextBaseTestCase):
         request = self._createRequestCtx(self.__class__.RESOURCE5_ID,
                                          subjectRoles=('role1',))
         response = self.pdp.evaluate(request)
-        self.failIf(response is None, "Null response")
+        self.assertFalse(response is None, "Null response")
         for result in response.results:
-            self.failIf(result.decision != Decision.PERMIT,
+            self.assertFalse(result.decision != Decision.PERMIT,
                         "Expecting Permit decision")
 
     def test03_02StringMd5hex(self):
@@ -222,9 +226,9 @@ class Test(XacmlContextBaseTestCase):
         request = self._createRequestCtx(self.__class__.RESOURCE6_ID,
                                          subjectRoles=('role1',))
         response = self.pdp.evaluate(request)
-        self.failIf(response is None, "Null response")
+        self.assertFalse(response is None, "Null response")
         for result in response.results:
-            self.failIf(result.decision != Decision.DENY,
+            self.assertFalse(result.decision != Decision.DENY,
                         "Expecting Deny decision")
 
     def test04_01AnyUriMd5hex(self):
@@ -236,9 +240,9 @@ class Test(XacmlContextBaseTestCase):
         request = self._createRequestCtx(self.__class__.RESOURCE7_ID,
                                          subjectRoles=('role1',))
         response = self.pdp.evaluate(request)
-        self.failIf(response is None, "Null response")
+        self.assertFalse(response is None, "Null response")
         for result in response.results:
-            self.failIf(result.decision != Decision.PERMIT,
+            self.assertFalse(result.decision != Decision.PERMIT,
                         "Expecting Permit decision")
 
     def test04_02AnyUriMd5hex(self):
@@ -250,10 +254,11 @@ class Test(XacmlContextBaseTestCase):
         request = self._createRequestCtx(self.__class__.RESOURCE8_ID,
                                          subjectRoles=('role1',))
         response = self.pdp.evaluate(request)
-        self.failIf(response is None, "Null response")
+        self.assertFalse(response is None, "Null response")
         for result in response.results:
-            self.failIf(result.decision != Decision.DENY,
+            self.assertFalse(result.decision != Decision.DENY,
                         "Expecting Deny decision")
+
 
 if __name__ == "__main__":
     unittest.main()

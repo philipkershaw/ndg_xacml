@@ -8,10 +8,12 @@ __copyright__ = ""
 __license__ = "BSD - see LICENSE file in top-level directory"
 __contact__ = "Philip.Kershaw@stfc.ac.uk"
 __revision__ = '$Id$'
-import UserDict
+from collections import UserDict
+from collections import MutableMapping
+
 
 # Interpret a string as a boolean
-str2Bool = lambda str: str.lower() in ("yes", "true", "t", "1")
+str2Bool = lambda str_: str_.lower() in ("yes", "true", "t", "1")
 
 class UniqList(list):
     """Extended version of list type to enable a list with unique items.
@@ -19,19 +21,20 @@ class UniqList(list):
     from the list
     """
     
-    def extend(self, iter):
+    def extend(self, iter_):
         """Extend a list with input iterable
-        @param iter: iterable object
-        @type iter: iterable type
+        @param iter_: iterable object
+        @type iter_: iterable type
         """
-        return super(UniqList, self).extend([i for i in iter if i not in self])
+        return super(UniqList, self).extend(
+                                        [i for i in iter_ if i not in self])
         
-    def __iadd__(self, iter):
+    def __iadd__(self, iter_):
         """Extend a list with input iterable
-        @param iter: iterable object
-        @type iter: iterable type
+        @param iter_: iterable object
+        @type iter_: iterable type
         """
-        return super(UniqList, self).__iadd__([i for i in iter 
+        return super(UniqList, self).__iadd__([i for i in iter_ 
                                                if i not in self])
          
     def append(self, item):
@@ -78,36 +81,36 @@ class TypedList(list):
     elementType = property(fget=_getElementType, 
                            doc="The allowed type or types for list elements")
      
-    def extend(self, iter):
+    def extend(self, iter_):
         """Extend a list with input iterable
-        @param iter: iterable object
-        @type iter: iterable type
+        @param iter_: iterable object
+        @type iter_: iterable type
         @raise TypeError: input item doesn't match list type
         """
-        for i in iter:
+        for i in iter_:
             if not isinstance(i, self.__elementType):
                 raise TypeError("List items must be of type %s" % 
                                 (self.__elementType,))
                 
-        return super(TypedList, self).extend(iter)
+        return super(TypedList, self).extend(iter_)
         
-    def __iadd__(self, iter):
+    def __iadd__(self, iter_):
         """Extend a list with input iterable
-        @param iter: iterable object
-        @type iter: iterable type
+        @param iter_: iterable object
+        @type iter_: iterable type
         @raise TypeError: input item doesn't match list type
         """
-        for i in iter:
+        for i in iter_:
             if not isinstance(i, self.__elementType):
                 raise TypeError("List items must be of type %s" % 
                                 (self.__elementType,))
                     
-        return super(TypedList, self).__iadd__(iter)
+        return super(TypedList, self).__iadd__(iter_)
          
     def append(self, item):
         """Add an item to the list
-        @param iter: iterable object
-        @type iter: iterable type
+        @param iter_: iterable object
+        @type iter_: iterable type
         @raise TypeError: input item doesn't match list type
         """
         if not isinstance(item, self.__elementType):
@@ -126,7 +129,7 @@ class RestrictedKeyNamesDict(dict):
         initialisation
         """
         super(RestrictedKeyNamesDict, self).__init__(*arg, **kw)
-        self.__keyNames = self.keys() 
+        self.__keyNames = list(self.keys()) 
           
     def __setitem__(self, key, val):
         """@param key: key for item to set
@@ -159,7 +162,7 @@ class RestrictedKeyNamesDict(dict):
 _isIterable = lambda obj: getattr(obj, '__iter__', False)
 
   
-class VettedDict(UserDict.DictMixin):
+class VettedDict(MutableMapping):
     """Enforce custom checking on keys and items before addition to a 
     dictionary
     """
@@ -185,7 +188,16 @@ class VettedDict(UserDict.DictMixin):
         self.__KeyFilter, self.__valueFilter = args
         
         self.__map = {}
-        
+
+    def __delitem__(self, key):
+        self.__map.__delitem__(key)
+    
+    def __iter__(self):
+        return iter(self.__map)
+    
+    def __len__(self):
+        return len(self.__map)
+         
     def _verifyKeyValPair(self, key, val):
         """Check given key value pair and return False if they should be 
         filtered out.  Filter functions may also raise an exception if they
@@ -249,13 +261,13 @@ class VettedDict(UserDict.DictMixin):
         return repr(self.__map)
     
     def keys(self):
-        return self.__map.keys()
+        return list(self.__map.keys())
     
     def items(self):
-        return self.__map.items()
+        return list(self.__map.items())
     
     def values(self):
-        return self.__map.values()
+        return list(self.__map.values())
     
     def __contains__(self, val):
         return self.__map.__contains__(val)
