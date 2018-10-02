@@ -6,10 +6,9 @@ NERC DataGrid
 """
 __author__ = "P J Kershaw"
 __date__ = "16/03/10"
-__copyright__ = "(C) 2010 Science and Technology Facilities Council"
-__license__ = "BSD - see LICENSE file in top-level directory"
+__copyright__ = "Copyright 2018 United Kingdom Research and Innovation"
+__license__ = "BSD - see LICENSE file in top-level package directory"
 __contact__ = "Philip.Kershaw@stfc.ac.uk"
-__revision__ = '$Id$'
 
 # Bootstrap setuptools if necessary.
 try:
@@ -22,8 +21,8 @@ except ImportError:
 import os
 THIS_DIR = os.path.dirname(__file__)
 
-# Read succeeds for sdist creation but fails for build with pip install.  Added
-# catch here for latter case.
+# Read succeeds for sdist creation but fails for build with pip install.  
+# Added catch here for latter case.
 try:
     LONG_DESCR = open(os.path.join(THIS_DIR, 'README.md')).read()
 except IOError:
@@ -33,7 +32,7 @@ except IOError:
 
 setup(
     name =           		'ndg_xacml',
-    version =        		'0.5.2',
+    version =        		'0.6.0',
     description =           'XACML 2.0 implementation for the NERC DataGrid',
     long_description =		LONG_DESCR,
     author =         		'Philip Kershaw',
@@ -41,11 +40,13 @@ setup(
     maintainer =         	'Philip Kershaw',
     maintainer_email =   	'Philip.Kershaw@stfc.ac.uk',
     url =            		'https://github.com/cedadev/ndg_xacml',
-    license =               'BSD - See LICENCE file for details',
+    license =               'BSD - See ndg/xacml/LICENCE file for details',
 #    install_requires =		[],
     extras_require =        {'improved_xpath_support': 'lxml'},
+    python_requires=        '>=3.5.0',
     packages =       		find_packages(),
     package_data =		    {
+        'ndg.xacml': ['LICENSE'],
         'ndg.xacml.core': ['documentation/Makefile'],
         'ndg.xacml.test': ['*.xml', "urn*"],
         'ndg.xacml.test.faam_policyset': ['*.xml', "urn*"],
@@ -56,7 +57,7 @@ setup(
     test_suite =		    'ndg.xacml.test',
     zip_safe =              False,
     classifiers =           [
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
         'Environment :: Web Environment',
         'Intended Audience :: End Users/Desktop',
@@ -68,6 +69,10 @@ setup(
         'Operating System :: Microsoft :: Windows',
         'Operating System :: POSIX :: Linux',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Topic :: Security',
         'Topic :: Internet',
         'Topic :: Scientific/Engineering',

@@ -3,8 +3,8 @@ requests
 """
 __author__ = "R B Wilkinson"
 __date__ = "06/01/12"
-__copyright__ = "(C) 2012 Science and Technology Facilities Council"
-__license__ = "BSD - see LICENSE file in top-level directory"
+__copyright__ = "Copyright 2018 United Kingdom Research and Innovation"
+__license__ = "BSD - see LICENSE file in top-level package directory"
 __contact__ = "Philip.Kershaw@stfc.ac.uk"
 __revision__ = "$Id$"
 

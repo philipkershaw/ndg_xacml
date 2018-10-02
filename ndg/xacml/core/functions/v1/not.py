@@ -4,10 +4,9 @@ NERC DataGrid
 """
 __author__ = "Prashant Kediyal"
 __date__ = "03/01/12"
-__copyright__ = ""
-__license__ = "BSD - see LICENSE file in top-level directory"
+__copyright__ = "Copyright 2018 United Kingdom Research and Innovation"
+__license__ = "BSD - see LICENSE file in top-level package directory"
 __contact__ = "pkediyal@gmail.com"
-__revision__ = '$Id$'
 from ndg.xacml.core.functions import (AbstractFunction, 
                                       FunctionClassFactoryInterface)
 from ndg.xacml.core.context.exceptions import XacmlContextTypeError

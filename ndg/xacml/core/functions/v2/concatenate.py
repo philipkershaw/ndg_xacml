@@ -4,10 +4,9 @@ NERC DataGrid
 """
 __author__ = "R B Wilkinson"
 __date__ = "06/02/12"
-__copyright__ = ""
-__license__ = "BSD - see LICENSE file in top-level directory"
+__copyright__ = "Copyright 2018 United Kingdom Research and Innovation"
+__license__ = "BSD - see LICENSE file in top-level package directory"
 __contact__ = "Philip.Kershaw@stfc.ac.uk"
-__revision__ = '$Id$'
 from ndg.xacml.core.attributevalue import AttributeValueClassFactory
 from ndg.xacml.core.functions import (AbstractFunction,
                                       FunctionClassFactoryBase)

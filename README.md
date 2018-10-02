@@ -9,6 +9,11 @@ expressing access control policies.
 
 See: http://www.oasis-open.org/committees/xacml/
 
+Release 0.6.0
+-------------
+ * Ported to Python 3.  Python 2 no longer supported.
+ * Updated BSD licence and copyright information
+
 Release 0.5.2
 -------------
  * Fix for test_pdp with SubjectMatch semantics - ALL values must match
